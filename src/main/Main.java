@@ -3,6 +3,7 @@ package main;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.List;
 
 import org.pcap4j.core.*;
 import org.pcap4j.core.PcapNetworkInterface.*;
@@ -39,7 +40,8 @@ public class Main {
       sb.append("A Packet Captured at ")
               .append(ph.getTimestamp())
               .append(":");
-      System.out.println(sb);
+//      System.out.println(packet.get(IpV4Packet.class));
+//      System.out.println(sb);
       System.out.println(packet);
   }
 }
