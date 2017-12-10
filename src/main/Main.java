@@ -16,25 +16,32 @@ public class Main {
     InetAddress addr;
     PcapNetworkInterface nif;
     try{
-        addr = InetAddress.getByName("192.168.1.1");
-        nif = new NifSelector().selectNetworkInterface();
+        /**
+         * TODO: 1. use this to list down the available interfaces
+         */
+        List allDevices = null;
+        allDevices = Pcaps.findAllDevs();
+        SnifferThread st;
+        for (Object device: allDevices){
+            PcapNetworkInterface niff = (PcapNetworkInterface) device;
+            //prints the interfaces found
+            System.out.println(niff.getName());
+        }
+        nif = (PcapNetworkInterface) allDevices.get(0);
+
+        //nif = new NifSelector().selectNetworkInterface();
+
         if (nif == null) System.exit(1);
         final PcapHandle handle = nif.openLive(65536, PromiscuousMode.PROMISCUOUS, 10);
-        PacketListener listener = new PacketListener() {
-            @Override
-            public void gotPacket(Packet packet) {
-                printPacket(packet, handle);
-            }
-        };
-        handle.loop(10, listener);
-    }catch (UnknownHostException e){
-        System.out.println("here" + e.toString());
+        // TODO: 2. Use Class SnifferThread to sniff packets
+        st = new SnifferThread(handle);
+        st.run();
     }catch (Exception e){
         System.out.println(e.toString());
     }
   }
 
-  private static void printPacket(Packet packet, PcapHandle ph){
+  public static void printPacket(Packet packet, PcapHandle ph){
       StringBuilder sb = new StringBuilder();
 //      sb.append("A Packet Captured at ")
 //              .append(ph.getTimestamp())
