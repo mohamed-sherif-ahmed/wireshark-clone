@@ -64,7 +64,7 @@ public class SniffingThread extends Service {
                     String origLen = String.valueOf(packet.getCaptureHeader().wirelen());
                     String info = "info";
 
-                    PacketDetails pd = new PacketDetails(date,sourceIP,destIP,protocol,origLen,info);
+                    PacketDetails pd = new PacketDetails(date,sourceIP,destIP,protocol,origLen,info,packet);
                     Main.packetsList.add(pd);
                     System.out.println(pd.dateProperty()+" "+pd.sourceIPProperty()+" "+pd.destIPProperty()+" "+pd.protocolProperty()+" "+pd.origLenProperty()+" "+pd.infoProperty());
                 }

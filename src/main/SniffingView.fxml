@@ -30,7 +30,7 @@
             <Label layoutX="151.0" layoutY="20.0" text="Filter By :" AnchorPane.leftAnchor="151.0" />
             <Button layoutX="538.5" layoutY="18.0" mnemonicParsing="false" text="Filter" AnchorPane.rightAnchor="14.5" />
             <Button fx:id="startButton" layoutX="14.0" layoutY="15.0" mnemonicParsing="false" onAction="#onStartButtonPressed" prefHeight="27.0" prefWidth="52.0" text="Start" AnchorPane.leftAnchor="14.0" />
-            <Button layoutX="78.0" layoutY="15.0" mnemonicParsing="false" onAction="#onStopButtonPressed" prefHeight="27.0" prefWidth="52.0" text="Stop" />
+            <Button fx:id="stopButton" disable="true" layoutX="78.0" layoutY="15.0" mnemonicParsing="false" onAction="#onStopButtonPressed" prefHeight="27.0" prefWidth="52.0" text="Stop" />
          </children>
       </AnchorPane>
    </top>
