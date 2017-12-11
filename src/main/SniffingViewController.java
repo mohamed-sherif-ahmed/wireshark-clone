@@ -1,93 +1,60 @@
 package main;
 
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.util.Callback;
 import org.jnetpcap.Pcap;
 import org.jnetpcap.PcapIf;
 import org.jnetpcap.packet.PcapPacket;
 import org.jnetpcap.packet.PcapPacketHandler;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
-public class SniffingViewController {
+public class SniffingViewController implements ControlledScreen {
+
+    ScreenController screenController;
+
     @FXML
     TableView<PacketDetails> tableView;
-    TableColumn<PacketDetails, Integer> numCol;
+    @FXML
+    TableColumn<PacketDetails, String> numCol;
+    @FXML
     TableColumn<PacketDetails, Date> timeCol;
+    @FXML
     TableColumn<PacketDetails, String> sourceCol;
+    @FXML
     TableColumn<PacketDetails, String> destCol;
+    @FXML
     TableColumn<PacketDetails, String> protocolCol;
-    TableColumn<PacketDetails, Integer> lenCol;
+    @FXML
+    TableColumn<PacketDetails, String> lenCol;
+    @FXML
     TableColumn<PacketDetails, String> infoCol;
+    @FXML
+    TextArea packetDetails;
 
-    List<PacketDetails> packets;
-
-    TextArea packetDetais;
-
-    private void getPackets(PcapIf device) {
-        StringBuilder errbuf = new StringBuilder(); //for holding any error msgs
-
-        int snaplen = 64 * 1024;           // Capture all packets, no trucation
-        int flags = Pcap.MODE_PROMISCUOUS; // capture all packets
-        int timeout = 10 * 1000;           // 10 seconds in millis
-        Pcap pcap =
-                Pcap.openLive(device.getName(), snaplen, flags, timeout, errbuf);
-
-        if (pcap == null) { //inform the user of an error
-            System.err.printf("Error while opening device for capture: "
-                    + errbuf.toString());
-            return;
-        }
-
-        /***************************************************************************
-         * Third we create a packet handler which will receive packets from the
-         * libpcap loop.
-         **************************************************************************/
-        PcapPacketHandler<String> jpacketHandler = new PcapPacketHandler<String>() {
-            public void nextPacket(PcapPacket packet, String user) {
-                Date date = new Date(packet.getCaptureHeader().timestampInMillis());
-                int capLen = packet.getCaptureHeader().caplen();
-                int origLen = packet.getCaptureHeader().wirelen();
-            }
-        };
-
-        /***************************************************************************
-         * Fourth we enter the loop and tell it to capture 10 packets. The loop
-         * method does a mapping of pcap.datalink() DLT value to JProtocol ID, which
-         * is needed by JScanner. The scanner scans the packet buffer and decodes
-         * the headers. The mapping is done automatically, although a variation on
-         * the loop method exists that allows the programmer to sepecify exactly
-         * which protocol ID to use as the data link type for this pcap interface.
-         **************************************************************************/
-        pcap.loop(10, jpacketHandler, "");
-
-        /***************************************************************************
-         * Last thing to do is close the pcap handle
-         **************************************************************************/
-        pcap.close();
+    @Override
+    public void setScreenParent(ScreenController screenController) {
+        this.screenController = screenController;
     }
 
-    public void fillTable() {
-        for (int i = 0; i < packets.size(); i++) {
-            tableView.getItems().add(packets.get(i));
-        }
-    }
-
-    public List<PacketDetails> getPackets() {
-        return packets;
-    }
-
-    public void setPackets(List<PacketDetails> packets) {
-        this.packets = packets;
+    public void onPacketSelected(){
+        PacketDetails selectedPacketDetails = tableView.getSelectionModel().getSelectedItem();
+        String text = "Package Numer: " + selectedPacketDetails.numProperty().toString() + "\nDate: " + selectedPacketDetails.dateProperty().toString() + "\nSource IP: " + selectedPacketDetails.sourceIPProperty().toString() + "\nDestination IP: " + selectedPacketDetails.destIPProperty().toString() + "\nProtocol: " + selectedPacketDetails.protocolProperty() + "\nPackage Length: " + selectedPacketDetails.origLenProperty();
+        packetDetails.setText(text);
     }
 
     public void initialize() {
-//        getPackets(Main.device);
-//        System.out.println(packets.get(0));\
-        fillTable();
+        numCol.setCellValueFactory(cellData -> cellData.getValue().numProperty());
+        timeCol.setCellValueFactory(cellData -> cellData.getValue().dateProperty());
+        sourceCol.setCellValueFactory(cellData -> cellData.getValue().sourceIPProperty());
+        destCol.setCellValueFactory(cellData -> cellData.getValue().destIPProperty());
+        protocolCol.setCellValueFactory(cellData -> cellData.getValue().protocolProperty());
+        lenCol.setCellValueFactory(cellData -> cellData.getValue().origLenProperty());
+        infoCol.setCellValueFactory(cellData -> cellData.getValue().infoProperty());
+
+        tableView.setItems(Main.packetsList);
     }
 }

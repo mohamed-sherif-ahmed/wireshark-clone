@@ -1,6 +1,7 @@
 package main;
 
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.LoadException;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.layout.StackPane;
@@ -22,9 +23,14 @@ public class ScreenController extends StackPane {
             ControlledScreen myScreenControler = ((ControlledScreen) myLoader.getController());
             myScreenControler.setScreenParent(this);
             addScreen(name, loadScreen);
+            System.out.println(name);
             return true;
+        } catch (LoadException e){
+            e.printStackTrace();
+            return false;
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.out.println("Error load: "+ name);
+            System.out.println(e.toString());
             return false;
         }
     }
