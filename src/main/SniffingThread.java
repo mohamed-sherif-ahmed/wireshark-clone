@@ -11,12 +11,12 @@ import org.jnetpcap.packet.PcapPacketHandler;
 
 public class SniffingThread extends Thread {
 
-    StringBuilder errbuf;
-    int snaplen;
-    int flags;
-    int timeout;
-    Pcap pcap;
-    PcapPacketHandler<String> jpacketHandler;
+    private StringBuilder errbuf;
+    private int snaplen;
+    private int flags;
+    private int timeout;
+    private Pcap pcap;
+    private PcapPacketHandler<String> jpacketHandler;
 
     public SniffingThread(){
         this.errbuf = new StringBuilder(); // For any error msgs
@@ -30,10 +30,6 @@ public class SniffingThread extends Thread {
             return;
         }
 
-        /***************************************************************************
-         * Third we create a packet handler which will receive packets from the
-         * libpcap loop.
-         **************************************************************************/
         this.jpacketHandler = new PcapPacketHandler<String>() {
             public void nextPacket(PcapPacket packet, String user) {
                 System.out.printf("Received packet at %s caplen=%-4d len=%-4d %s\n",
@@ -47,14 +43,6 @@ public class SniffingThread extends Thread {
     }
 
     public void run(){
-        /***************************************************************************
-         * Fourth we enter the loop and tell it to capture 10 packets. The loop
-         * method does a mapping of pcap.datalink() DLT value to JProtocol ID, which
-         * is needed by JScanner. The scanner scans the packet buffer and decodes
-         * the headers. The mapping is done automatically, although a variation on
-         * the loop method exists that allows the programmer to sepecify exactly
-         * which protocol ID to use as the data link type for this pcap interface.
-         **************************************************************************/
         while (true){
             pcap.loop(1, jpacketHandler, "jNetPcap rocks!");
         }
