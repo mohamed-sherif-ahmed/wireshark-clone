@@ -12,6 +12,7 @@ public class PacketDetails {
         return num;
     }
 
+    private int count = 0;
     private final StringProperty num;
     private final StringProperty sourceIP;
     private final StringProperty destIP;
@@ -52,8 +53,9 @@ public class PacketDetails {
         return info;
     }
 
-    public PacketDetails(String num, String sourceIP, String destIP, String protocol, String origLen, String info) {
-        this.num = new SimpleStringProperty(num);
+    public PacketDetails(String date, String sourceIP, String destIP, String protocol, String origLen, String info) {
+        count++;
+        this.num = new SimpleStringProperty(String.valueOf(count));
         this.date = new SimpleObjectProperty(new Date(10,10,10));
         this.sourceIP = new SimpleStringProperty(sourceIP);
         this.destIP = new SimpleStringProperty(destIP);

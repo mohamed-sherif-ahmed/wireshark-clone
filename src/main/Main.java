@@ -29,8 +29,6 @@ public class Main extends Application {
     public static void main(String[] args) {
         packetsList.add(new PacketDetails("1","Soucre IP", "Dest IP", "HTTP", "20","Info"));
         launch(args);
-        SniffingThread st = new SniffingThread();
-        st.start();
     }
 
     @Override
