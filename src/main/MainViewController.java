@@ -33,8 +33,6 @@ public class MainViewController implements ControlledScreen {
     public void selectInterface() {
         Main.device = alldevs.get(interfaceDropMenu.getSelectionModel().getSelectedIndex());
         mainScreen.setScreen("SniffingView");
-        SniffingThread st = new SniffingThread();
-        st.start();
     }
 
     @Override

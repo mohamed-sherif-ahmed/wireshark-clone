@@ -35,6 +35,8 @@ public class SniffingViewController implements ControlledScreen {
     @FXML
     TextArea packetDetails;
 
+    SniffingThread thread;
+
     @Override
     public void setScreenParent(ScreenController screenController) {
         this.screenController = screenController;
@@ -44,6 +46,14 @@ public class SniffingViewController implements ControlledScreen {
         PacketDetails selectedPacketDetails = tableView.getSelectionModel().getSelectedItem();
         String text = "Package Numer: " + selectedPacketDetails.numProperty().toString() + "\nDate: " + selectedPacketDetails.dateProperty().toString() + "\nSource IP: " + selectedPacketDetails.sourceIPProperty().toString() + "\nDestination IP: " + selectedPacketDetails.destIPProperty().toString() + "\nProtocol: " + selectedPacketDetails.protocolProperty() + "\nPackage Length: " + selectedPacketDetails.origLenProperty();
         packetDetails.setText(text);
+    }
+
+    public void onStartButtonPressed(){
+        thread = new SniffingThread();
+        thread.start();
+    }
+
+    public void onStopButtonPressed(){
     }
 
     public void initialize() {
