@@ -7,8 +7,8 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.MainViewController">
    <children>
-      <Button fx:id="selectButton" layoutX="471.0" layoutY="187.0" mnemonicParsing="false" onAction="#selectInterface" text="Select Interface" />
-      <ComboBox fx:id="interfaceDropMenu" layoutX="14.0" layoutY="187.0" prefHeight="27.0" prefWidth="443.0" />
-      <Label layoutX="269.0" layoutY="14.0" text="Wireshark" />
+      <Button fx:id="selectButton" layoutX="471.0" layoutY="187.0" mnemonicParsing="false" onAction="#selectInterface" text="Select Interface" AnchorPane.rightAnchor="32.0" />
+      <ComboBox fx:id="interfaceDropMenu" layoutX="14.0" layoutY="187.0" prefHeight="27.0" prefWidth="443.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="143.0" />
+      <Label layoutX="7.0" layoutY="14.0" prefHeight="17.0" prefWidth="584.0" text="Wireshark" textAlignment="CENTER" wrapText="true" AnchorPane.leftAnchor="9.0" AnchorPane.rightAnchor="9.0" AnchorPane.topAnchor="14.0" />
    </children>
 </AnchorPane>

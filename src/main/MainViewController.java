@@ -9,11 +9,13 @@ import org.jnetpcap.PcapIf;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainViewController {
+public class MainViewController implements ControlledScreen {
     @FXML
     Button selectButton ;
     @FXML
     ComboBox interfaceDropMenu ;
+
+    ScreenController mainScreen;
 
     List<PcapIf> alldevs;
 
@@ -24,11 +26,17 @@ public class MainViewController {
         int r = Pcap.findAllDevs(alldevs, errbuf);
         for (PcapIf p: alldevs ) {
             System.out.println("here"+ p );
-            interfaceDropMenu.getItems().addAll(p);
+            interfaceDropMenu.getItems().addAll(p.getDescription());
         }
     }
 
     public void selectInterface(){
         Main.device = alldevs.get(interfaceDropMenu.getSelectionModel().getSelectedIndex());
+        mainScreen.setScreen("SniffingView");
+    }
+
+    @Override
+    public void setScreenParent(ScreenController sc) {
+        mainScreen = sc;
     }
 }
