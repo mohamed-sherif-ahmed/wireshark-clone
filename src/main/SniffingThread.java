@@ -78,9 +78,12 @@ public class SniffingThread extends Service {
             @Override
             protected Object call() throws Exception {
                 while (true){
-                    if(!cancelled)
-                        pcap.loop(1, jpacketHandler, "");
+                    if(cancelled) {
+                        break;
+                    }
+                    pcap.loop(1, jpacketHandler, "");
                 }
+                return null;
             }
         };
     }
