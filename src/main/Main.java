@@ -7,8 +7,10 @@ import java.util.List;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.jnetpcap.Pcap;
 import org.jnetpcap.PcapIf;
@@ -17,6 +19,7 @@ import org.jnetpcap.packet.PcapPacketHandler;
 
 public class Main extends Application {
     public static PcapIf device ;
+    ScreenController screenController;
     /**
      * Main startup method
      *
@@ -29,10 +32,21 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("MainView.fxml"));
-        Parent loadScreen = (Parent) loader.load();
-        primaryStage.setTitle("Hello World");
-        primaryStage.setScene(new Scene(loadScreen, 300, 275));
+
+        screenController = new ScreenController();
+        screenController.loadScreen("MainView","MainView.fxml");
+        screenController.loadScreen("SniffingView", "SniffingView.fxml");
+        screenController.setScreen("MainView");
+        Group root = new Group();
+        root.getChildren().addAll(screenController);
+        Scene scene = new Scene(root, 800, 600);
+        primaryStage.setScene(scene);
         primaryStage.show();
+
+//        FXMLLoader loader = new FXMLLoader(getClass().getResource("MainView.fxml"));
+//        Parent loadScreen = (Parent) loader.load();
+//        primaryStage.setTitle("Hello World");
+//        primaryStage.setScene(new Scene(loadScreen, 300, 275));
+//        primaryStage.show();
     }
 }
