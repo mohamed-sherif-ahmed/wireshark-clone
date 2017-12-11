@@ -29,6 +29,7 @@ public class SniffingThread extends Service {
     private Tcp tcp;
     private Udp udp;
     private Http http;
+    private boolean cancelled;
 
     public SniffingThread(){
         this.errbuf = new StringBuilder(); // For any error msgs
@@ -37,6 +38,10 @@ public class SniffingThread extends Service {
         this.timeout = 10 * 1000;           // 10 seconds in millis
         this.pcap = Pcap.openLive(Main.device.getName(), this.snaplen, this.flags, this.timeout, this.errbuf);
         this.ip = new Ip4();
+        this.tcp = new Tcp();
+        this.udp = new Udp();
+        this.http = new Http();
+        cancelled = false;
 
         if (pcap == null) {
             System.err.printf("Error while opening device for capture: " + this.errbuf.toString());
@@ -52,7 +57,7 @@ public class SniffingThread extends Service {
 //                        user                                 // User supplied object
 //                );
                 if(packet.hasHeader(ip)){
-                    String date = FormatUtils.ip(ip.source());
+                    String date = String.valueOf(packet.getCaptureHeader().timestampInMillis());
                     String sourceIP = FormatUtils.ip(ip.source());
                     String destIP = FormatUtils.ip(ip.destination());
                     String protocol = ip.typeEnum().toString();
@@ -73,10 +78,15 @@ public class SniffingThread extends Service {
             @Override
             protected Object call() throws Exception {
                 while (true){
-                    pcap.loop(1, jpacketHandler, "");
+                    if(!cancelled)
+                        pcap.loop(1, jpacketHandler, "");
                 }
             }
         };
+    }
+
+    public void stop(){
+        this.cancelled = true;
     }
 
 }
