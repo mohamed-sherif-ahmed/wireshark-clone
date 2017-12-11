@@ -11,26 +11,26 @@ import java.util.List;
 
 public class MainViewController implements ControlledScreen {
     @FXML
-    Button selectButton ;
+    Button selectButton;
     @FXML
-    ComboBox interfaceDropMenu ;
+    ComboBox interfaceDropMenu;
 
     ScreenController mainScreen;
 
     List<PcapIf> alldevs;
 
-    public void initialize (){
+    public void initialize() {
         alldevs = new ArrayList<PcapIf>(); // Will be filled with NICs
         StringBuilder errbuf = new StringBuilder(); // For any error msgs
 
         int r = Pcap.findAllDevs(alldevs, errbuf);
-        for (PcapIf p: alldevs ) {
-            System.out.println("here"+ p );
+        for (PcapIf p : alldevs) {
+            System.out.println("here" + p);
             interfaceDropMenu.getItems().addAll(p.getDescription());
         }
     }
 
-    public void selectInterface(){
+    public void selectInterface() {
         Main.device = alldevs.get(interfaceDropMenu.getSelectionModel().getSelectedIndex());
         mainScreen.setScreen("SniffingView");
     }
