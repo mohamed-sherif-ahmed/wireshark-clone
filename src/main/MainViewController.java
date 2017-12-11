@@ -26,7 +26,7 @@ public class MainViewController implements ControlledScreen {
         int r = Pcap.findAllDevs(alldevs, errbuf);
         for (PcapIf p: alldevs ) {
             System.out.println("here"+ p );
-            interfaceDropMenu.getItems().addAll(p);
+            interfaceDropMenu.getItems().addAll(p.getDescription());
         }
     }
 
