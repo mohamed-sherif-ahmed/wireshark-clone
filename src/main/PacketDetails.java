@@ -61,4 +61,5 @@ public class PacketDetails {
         this.origLen = new SimpleStringProperty(origLen);
         this.info = new SimpleStringProperty(info);
     }
+
 }

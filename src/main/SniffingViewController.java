@@ -1,7 +1,9 @@
 package main;
 
+import com.sun.javafx.charts.Legend;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.util.Callback;
@@ -11,6 +13,8 @@ import org.jnetpcap.packet.PcapPacket;
 import org.jnetpcap.packet.PcapPacketHandler;
 
 import java.util.*;
+
+import static main.Main.packetsList;
 
 public class SniffingViewController implements ControlledScreen {
 
@@ -35,6 +39,9 @@ public class SniffingViewController implements ControlledScreen {
     @FXML
     TextArea packetDetails;
 
+    @FXML
+    TextField filterField ;
+
     @Override
     public void setScreenParent(ScreenController screenController) {
         this.screenController = screenController;
@@ -55,6 +62,34 @@ public class SniffingViewController implements ControlledScreen {
         lenCol.setCellValueFactory(cellData -> cellData.getValue().origLenProperty());
         infoCol.setCellValueFactory(cellData -> cellData.getValue().infoProperty());
 
-        tableView.setItems(Main.packetsList);
+        tableView.setItems(packetsList);
     }
+    public void filter(){
+        // 1. Wrap the ObservableList in a FilteredList (initially display all data).
+        FilteredList<PacketDetails> filteredData = new FilteredList<>(packetsList, p -> true);
+        // 2. Set the filter Predicate whenever the filter changes.
+        filterField.textProperty().addListener((observable, oldValue, newValue) -> {
+            filteredData.setPredicate(PacketDetails -> {
+                // If filter text is empty, display all persons.
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+
+                // Compare first name and last name of every person with filter text.
+                String lowerCaseFilter = newValue.toLowerCase();
+
+                if (PacketDetails.getProtocol().toString().toLowerCase().contains(lowerCaseFilter)) {
+                    return true; // Filter matches first name.
+                } else if (PacketDetails.destIPProperty().toString().toLowerCase().contains(lowerCaseFilter)) {
+                    return true; // Filter matches last name.
+                } else if (PacketDetails.sourceIPProperty().toString().toLowerCase().contains(lowerCaseFilter)) {
+                    return true; // Filter matches last name.
+                }
+
+                return false; // Does not match.
+            });
+        });
+
+    }
+
 }
