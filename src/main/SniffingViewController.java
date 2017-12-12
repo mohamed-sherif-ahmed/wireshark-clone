@@ -38,6 +38,12 @@ public class SniffingViewController implements ControlledScreen {
     TableColumn<PacketDetails, String> infoCol;
     @FXML
     TextArea packetDetails;
+    @FXML
+    Button startButton;
+    @FXML
+    Button stopButton;
+
+    SniffingThread thread;
 
     @FXML
     TextField filterField ;
@@ -49,8 +55,22 @@ public class SniffingViewController implements ControlledScreen {
 
     public void onPacketSelected(){
         PacketDetails selectedPacketDetails = tableView.getSelectionModel().getSelectedItem();
-        String text = "Package Numer: " + selectedPacketDetails.numProperty().toString() + "\nDate: " + selectedPacketDetails.dateProperty().toString() + "\nSource IP: " + selectedPacketDetails.sourceIPProperty().toString() + "\nDestination IP: " + selectedPacketDetails.destIPProperty().toString() + "\nProtocol: " + selectedPacketDetails.protocolProperty() + "\nPackage Length: " + selectedPacketDetails.origLenProperty();
+        String text = selectedPacketDetails.packet.toString();
+//        String text = "Package Numer: " + selectedPacketDetails.numProperty().get() + "\nDate: " + selectedPacketDetails.dateProperty().get() + "\nSource IP: " + selectedPacketDetails.sourceIPProperty().get() + "\nDestination IP: " + selectedPacketDetails.destIPProperty().get() + "\nProtocol: " + selectedPacketDetails.protocolProperty().get() + "\nPackage Length: " + selectedPacketDetails.origLenProperty().get();
         packetDetails.setText(text);
+    }
+
+    public void onStartButtonPressed(){
+        thread = new SniffingThread();
+        thread.start();
+        startButton.setDisable(true);
+        stopButton.setDisable(false);
+    }
+
+    public void onStopButtonPressed(){
+        stopButton.setDisable(true);
+        startButton.setDisable(false);
+        thread.stop();
     }
 
     public void initialize() {

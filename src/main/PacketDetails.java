@@ -1,6 +1,7 @@
 package main;
 
 import javafx.beans.property.*;
+import org.jnetpcap.packet.PcapPacket;
 
 import java.time.LocalDate;
 import java.util.Date;
@@ -12,12 +13,15 @@ public class PacketDetails {
         return num;
     }
 
+    static private int count = 0;
     private final StringProperty num;
     private final StringProperty sourceIP;
     private final StringProperty destIP;
     private final StringProperty protocol;
     private final StringProperty origLen;
     private final StringProperty info;
+    PcapPacket packet;
+
     public String getProtocol() {
         return protocol.get();
     }
@@ -52,9 +56,10 @@ public class PacketDetails {
         return info;
     }
 
-    public PacketDetails(String num, String sourceIP, String destIP, String protocol, String origLen, String info) {
-        this.num = new SimpleStringProperty(num);
-        this.date = new SimpleObjectProperty(new Date(10,10,10));
+    public PacketDetails(String date, String sourceIP, String destIP, String protocol, String origLen, String info, PcapPacket packet) {
+        this.num = new SimpleStringProperty(String.valueOf(++count));
+        this.packet = packet;
+        this.date = new SimpleObjectProperty(date);
         this.sourceIP = new SimpleStringProperty(sourceIP);
         this.destIP = new SimpleStringProperty(destIP);
         this.protocol = new SimpleStringProperty(protocol);

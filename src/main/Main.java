@@ -27,10 +27,7 @@ public class Main extends Application {
     ScreenController screenController;
 
     public static void main(String[] args) {
-        packetsList.add(new PacketDetails("1","Soucre IP", "Dest IP", "HTTP", "20","Info"));
         launch(args);
-        SniffingThread st = new SniffingThread();
-        st.start();
     }
 
     @Override
@@ -42,7 +39,7 @@ public class Main extends Application {
         screenController.setScreen("MainView");
         Group root = new Group();
         root.getChildren().addAll(screenController);
-        Scene scene = new Scene(root, 800, 600);
+        Scene scene = new Scene(root, 600, 400);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
