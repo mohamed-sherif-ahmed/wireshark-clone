@@ -14,15 +14,15 @@
 
 <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.SniffingViewController">
    <center>
-      <TableView fx:id="tableView" onMouseClicked="#onPacketSelected" prefHeight="228.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+      <TableView fx:id="tableView" onMouseClicked="#onPacketSelected" prefHeight="228.0" prefWidth="600.0" style="-fx-font-family: Monospaced; -fx-font-size: 16px;" BorderPane.alignment="CENTER">
         <columns>
-          <TableColumn fx:id="numCol" prefWidth="75.0" text="No." />
-          <TableColumn fx:id="timeCol" prefWidth="161.0" text="Time" />
-            <TableColumn fx:id="sourceCol" prefWidth="141.0" text="Source" />
-            <TableColumn fx:id="destCol" prefWidth="149.0" text="Destination" />
-            <TableColumn fx:id="protocolCol" prefWidth="85.0" text="Protocol" />
-            <TableColumn fx:id="lenCol" minWidth="0.0" prefWidth="113.0" text="Length" />
-            <TableColumn fx:id="infoCol" prefWidth="555.0" text="Info" />
+          <TableColumn fx:id="numCol" prefWidth="44.0" text="No." />
+          <TableColumn fx:id="timeCol" prefWidth="192.0" text="Time" />
+            <TableColumn fx:id="sourceCol" prefWidth="161.0" text="Source" />
+            <TableColumn fx:id="destCol" prefWidth="170.0" text="Destination" />
+            <TableColumn fx:id="protocolCol" prefWidth="84.0" text="Protocol" />
+            <TableColumn fx:id="lenCol" minWidth="0.0" prefWidth="131.0" text="Length" />
+            <TableColumn fx:id="infoCol" prefWidth="497.0" text="Info" />
         </columns>
       </TableView>
    </center>
