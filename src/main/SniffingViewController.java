@@ -112,4 +112,9 @@ public class SniffingViewController implements ControlledScreen {
 
     }
 
+    public void returnToChangeInterface() {
+        Main.packetsList = FXCollections.observableArrayList();
+        screenController.setScreen("MainView");
+    }
+
 }

@@ -39,7 +39,7 @@ public class Main extends Application {
         screenController.setScreen("MainView");
         Group root = new Group();
         root.getChildren().addAll(screenController);
-        Scene scene = new Scene(root, 600, 400);
+        Scene scene = new Scene(root, 1280, 720);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
