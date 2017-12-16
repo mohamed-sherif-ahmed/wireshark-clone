@@ -10,6 +10,7 @@ import org.jnetpcap.Pcap;
 import org.jnetpcap.PcapIf;
 import org.jnetpcap.packet.PcapPacket;
 import org.jnetpcap.packet.PcapPacketHandler;
+import org.jnetpcap.protocol.lan.Ethernet;
 import org.jnetpcap.protocol.network.Ip4;
 import org.jnetpcap.packet.format.FormatUtils;
 import org.jnetpcap.protocol.tcpip.Http;
@@ -29,6 +30,7 @@ public class SniffingThread extends Service {
     private Tcp tcp;
     private Udp udp;
     private Http http;
+    private Ethernet eth;
     private boolean cancelled;
 
     public SniffingThread(){
@@ -41,6 +43,8 @@ public class SniffingThread extends Service {
         this.tcp = new Tcp();
         this.udp = new Udp();
         this.http = new Http();
+        this.eth = new Ethernet();
+
         cancelled = false;
 
         if (pcap == null) {
@@ -56,7 +60,20 @@ public class SniffingThread extends Service {
 //                        packet.getCaptureHeader().wirelen(), // Original length
 //                        user                                 // User supplied object
 //                );
-                if(packet.hasHeader(ip)){
+
+                if (packet.hasHeader(http)){
+                    packet.hasHeader(ip);
+                    String date = String.valueOf(packet.getCaptureHeader().timestampInMillis());
+                    String sourceIP = FormatUtils.ip(ip.source());
+                    String destIP = FormatUtils.ip(ip.destination());
+                    String protocol = "HTTP";
+                    String origLen = String.valueOf(packet.getCaptureHeader().wirelen());
+                    String info = "info";
+
+                    PacketDetails pd = new PacketDetails(date,sourceIP,destIP,protocol,origLen,info,packet);
+                    Main.packetsList.add(pd);
+
+                }else if(packet.hasHeader(ip)){
                     String date = String.valueOf(packet.getCaptureHeader().timestampInMillis());
                     String sourceIP = FormatUtils.ip(ip.source());
                     String destIP = FormatUtils.ip(ip.destination());
@@ -66,7 +83,7 @@ public class SniffingThread extends Service {
 
                     PacketDetails pd = new PacketDetails(date,sourceIP,destIP,protocol,origLen,info,packet);
                     Main.packetsList.add(pd);
-                    System.out.println(pd.dateProperty()+" "+pd.sourceIPProperty()+" "+pd.destIPProperty()+" "+pd.protocolProperty()+" "+pd.origLenProperty()+" "+pd.infoProperty());
+                    //System.out.println(pd.dateProperty()+" "+pd.sourceIPProperty()+" "+pd.destIPProperty()+" "+pd.protocolProperty()+" "+pd.origLenProperty()+" "+pd.infoProperty());
                 }
             }
         };
