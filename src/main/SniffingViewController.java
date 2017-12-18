@@ -46,6 +46,7 @@ public class SniffingViewController implements ControlledScreen {
     Button stopButton;
 
     SniffingThread thread;
+    PcapFileIO pcapFileIO = new PcapFileIO("ss.cap");
 
     @FXML
     TextField filterField ;
@@ -135,6 +136,10 @@ public class SniffingViewController implements ControlledScreen {
     public void returnToChangeInterface() {
         Main.packetsList = FXCollections.observableArrayList();
         screenController.setScreen("MainView");
+    }
+
+    public void saveCap(){
+        pcapFileIO.saveOfflineFiles(thread.getPcap());
     }
 
 }
