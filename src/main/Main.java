@@ -23,6 +23,8 @@ import org.jnetpcap.packet.PcapPacketHandler;
 public class Main extends Application {
     public static PcapIf device;
     public static ObservableList<PacketDetails> packetsList = FXCollections.observableArrayList();
+    public static boolean dumpStatus;
+    public static String dumpFileName;
 
     ScreenController screenController;
 

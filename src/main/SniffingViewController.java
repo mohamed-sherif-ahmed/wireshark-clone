@@ -69,7 +69,7 @@ public class SniffingViewController implements ControlledScreen {
     }
 
     public void onStartButtonPressed(){
-        thread = new SniffingThread();
+        thread = new SniffingThread(Main.dumpStatus);
         thread.start();
         startButton.setDisable(true);
         stopButton.setDisable(false);

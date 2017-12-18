@@ -2,7 +2,9 @@ package main;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.TextField;
 import org.jnetpcap.Pcap;
 import org.jnetpcap.PcapIf;
 
@@ -14,6 +16,10 @@ public class MainViewController implements ControlledScreen {
     Button selectButton;
     @FXML
     ComboBox interfaceDropMenu;
+    @FXML
+    CheckBox dumperStatus;
+    @FXML
+    TextField fileName;
 
     ScreenController mainScreen;
 
@@ -32,6 +38,12 @@ public class MainViewController implements ControlledScreen {
 
     public void selectInterface() {
         Main.device = alldevs.get(interfaceDropMenu.getSelectionModel().getSelectedIndex());
+        if (fileName.getText().isEmpty()){
+            Main.dumpFileName = "pcapdump.cap";
+        } else {
+            Main.dumpFileName = fileName.getText() + ".cap";
+        }
+        Main.dumpStatus = dumperStatus.isSelected();
         mainScreen.setScreen("SniffingView");
     }
 

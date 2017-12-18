@@ -6,6 +6,7 @@ import org.jnetpcap.PcapDumper;
 import org.jnetpcap.PcapIf;
 import org.jnetpcap.packet.PcapPacket;
 import org.jnetpcap.packet.PcapPacketHandler;
+import org.jnetpcap.packet.PeeringException;
 import org.jnetpcap.util.PcapPacketArrayList;
 
 import java.nio.ByteBuffer;
@@ -52,9 +53,11 @@ public class PcapFileIO {
     public void saveOfflineFiles(Pcap pcap){
         PcapDumper pdumper =  pcap.dumpOpen("dump.cap");
         for (PacketDetails pd : Main.packetsList) {
-            ByteBuffer bbuf = ByteBuffer.allocate(pd.packet.getTotalSize());
-            //Byte [] bytes = new Byte[pd.packet.getTotalSize()];
-            pd.packet.transferStateAndDataTo(bbuf);
+            ByteBuffer bbuf = ByteBuffer.allocateDirect(pd.packet.getCaptureHeader().wirelen());
+            byte[] bytes = new byte[pd.packet.size()];
+            System.out.println("bytes : " + bytes.length);
+            pd.packet.transferStateAndDataTo(bytes);
+            System.out.println("bytes : " + bytes.length);
             pdumper.dump(pd.packet.getCaptureHeader().timestampInMillis(),pd.packet.getCaptureHeader().hdr_len(),pd.packet.getCaptureHeader().caplen(),pd.packet.getCaptureHeader().wirelen(),bbuf);
 
         }
