@@ -39,4 +39,14 @@ public class MainViewController implements ControlledScreen {
     public void setScreenParent(ScreenController sc) {
         mainScreen = sc;
     }
+
+    public void load (){
+        PcapFileIO fileLoad = new PcapFileIO("toni.pcap");
+        try {
+            fileLoad.readOfflineFiles();
+            mainScreen.setScreen("SniffingView");
+        } catch (Exception exceptionReadingPcapFiles) {
+            exceptionReadingPcapFiles.printStackTrace();
+        }
+    }
 }
