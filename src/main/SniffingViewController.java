@@ -1,9 +1,11 @@
 package main;
 
 import com.sun.javafx.charts.Legend;
+import javafx.beans.property.Property;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.util.Callback;
@@ -48,6 +50,11 @@ public class SniffingViewController implements ControlledScreen {
     @FXML
     TextField filterField ;
 
+    Boolean x =false ;
+
+    SortedList<PacketDetails> sortedData ;
+
+
     @Override
     public void setScreenParent(ScreenController screenController) {
         this.screenController = screenController;
@@ -83,33 +90,46 @@ public class SniffingViewController implements ControlledScreen {
         infoCol.setCellValueFactory(cellData -> cellData.getValue().infoProperty());
 
         tableView.setItems(packetsList);
-    }
-    public void filter(){
+
         // 1. Wrap the ObservableList in a FilteredList (initially display all data).
         FilteredList<PacketDetails> filteredData = new FilteredList<>(packetsList, p -> true);
         // 2. Set the filter Predicate whenever the filter changes.
         filterField.textProperty().addListener((observable, oldValue, newValue) -> {
             filteredData.setPredicate(PacketDetails -> {
-                // If filter text is empty, display all persons.
+                // If filter text is empty, display all Data
                 if (newValue == null || newValue.isEmpty()) {
                     return true;
                 }
 
-                // Compare first name and last name of every person with filter text.
+                // Compare with filter text.
                 String lowerCaseFilter = newValue.toLowerCase();
-
-                if (PacketDetails.getProtocol().toString().toLowerCase().contains(lowerCaseFilter)) {
-                    return true; // Filter matches first name.
-                } else if (PacketDetails.destIPProperty().toString().toLowerCase().contains(lowerCaseFilter)) {
-                    return true; // Filter matches last name.
-                } else if (PacketDetails.sourceIPProperty().toString().toLowerCase().contains(lowerCaseFilter)) {
-                    return true; // Filter matches last name.
+                if (PacketDetails.getProtocol().toLowerCase().contains(lowerCaseFilter)) {
+                    System.out.println("filterProtocol");
+                    return true; // Filter matches protocol.
+                } else if (PacketDetails.getNum().contains(newValue)) {
+                    System.out.println("filterno.");
+                    return true; // Filter matches SourceIP.
                 }
-
+//                else if (PacketDetails.destIPProperty().toString().contains(newValue)) {
+//                    System.out.println("filterDest");
+//                    return true; // Filter matches DestIP.
+//                }
+//                else if (PacketDetails.sourceIPProperty().toString().toLowerCase().contains(lowerCaseFilter)) {
+//                    System.out.println("filterSource");
+//                    return true; // Filter matches SourceIP.
+//                }
+                System.out.println("filter0");
                 return false; // Does not match.
             });
         });
+        sortedData = new SortedList<>(filteredData);
 
+    }
+
+    public void filter(){
+        sortedData.comparatorProperty().bind(tableView.comparatorProperty());
+        tableView.setItems(sortedData);
+        //((Property<Comparator<? super PacketDetails>>) tableView.unbindBidirectional(sortedData.comparatorProperty());
     }
 
     public void returnToChangeInterface() {
