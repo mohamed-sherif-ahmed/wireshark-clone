@@ -11,6 +11,8 @@ import org.jnetpcap.protocol.network.Arp;
 import org.jnetpcap.protocol.network.Ip4;
 import org.jnetpcap.packet.format.FormatUtils;
 import org.jnetpcap.protocol.tcpip.Http;
+import org.jnetpcap.protocol.tcpip.Tcp;
+import org.jnetpcap.protocol.tcpip.Udp;
 
 import java.nio.ByteBuffer;
 
@@ -26,6 +28,8 @@ public class SniffingThread extends Service {
     public static Ip4 ip =  new Ip4();
     public static Http http = new Http();
     public static Arp arp = new Arp();
+    public static Tcp tcp = new Tcp();
+    public static Udp udp = new Udp();
     private boolean cancelled;
 
     //dumper variables
@@ -89,6 +93,12 @@ public class SniffingThread extends Service {
     }
 
 
+    /**
+     * tcp -> sequence , ack, flags : syn
+     * udp -> length , checksum desc
+     * http -> length
+     * @param packet
+     */
     public static void parsePacket(PcapPacket packet) {
         if (packet.hasHeader(SniffingThread.http)){
             packet.hasHeader(SniffingThread.ip);
@@ -97,18 +107,41 @@ public class SniffingThread extends Service {
             String destIP = FormatUtils.ip(SniffingThread.ip.destination());
             String protocol = "HTTP";
             String origLen = String.valueOf(packet.getCaptureHeader().wirelen());
-            String info = "info";
+            String info = "" + ip.length();
 
             PacketDetails pd = new PacketDetails(date,sourceIP,destIP,protocol,origLen,info,packet);
             Main.packetsList.add(pd);
 
+        }else if (packet.hasHeader(SniffingThread.udp)){
+            //System.out.println("UDP");
+            packet.hasHeader(SniffingThread.ip);
+            if (udp.source() == 53 || udp.destination() == 53){
+                String date = String.valueOf(packet.getCaptureHeader().timestampInMillis());
+                String sourceIP = FormatUtils.ip(SniffingThread.ip.source());
+                String destIP = FormatUtils.ip(SniffingThread.ip.destination());
+                String protocol = "DNS";
+                String origLen = String.valueOf(packet.getCaptureHeader().wirelen());
+                String info = "Source Port:"  + udp.source() + " Destination Port: " + udp.destination();
+
+                PacketDetails pd = new PacketDetails(date,sourceIP,destIP,protocol,origLen,info,packet);
+                Main.packetsList.add(pd);
+            }
         }else if(packet.hasHeader(SniffingThread.ip)){
+            packet.hasHeader(SniffingThread.udp);
+            packet.hasHeader(SniffingThread.tcp);
             String date = String.valueOf(packet.getCaptureHeader().timestampInMillis());
             String sourceIP = FormatUtils.ip(SniffingThread.ip.source());
             String destIP = FormatUtils.ip(SniffingThread.ip.destination());
-            String protocol = SniffingThread.ip.typeEnum().toString();
+            String protocol;
+            //System.out.println(tcp.source());
+//            if (SniffingThread.udp.source() == 53 || SniffingThread.udp.destination() == 53) {
+//                protocol = "DNS";
+//            }else{
+//                protocol = SniffingThread.ip.typeEnum().toString();
+//            }
+            protocol = SniffingThread.ip.typeEnum().toString();
             String origLen = String.valueOf(packet.getCaptureHeader().wirelen());
-            String info = "info";
+            String info = "Sequence: " + tcp.seq() + " ack : " + tcp.flags_ACK() + " syn : " + tcp.flags_SYN();
 
             PacketDetails pd = new PacketDetails(date,sourceIP,destIP,protocol,origLen,info,packet);
             Main.packetsList.add(pd);
@@ -123,7 +156,7 @@ public class SniffingThread extends Service {
             String date = String.valueOf(packet.getCaptureHeader().timestampInMillis());
             String protocol = "ARP";
             String origLen = String.valueOf(packet.getCaptureHeader().wirelen());
-            String info = "info";
+            String info = "" + arp.hardwareTypeDescription();
 
             PacketDetails pd = new PacketDetails(date,srcIp,dstIp,protocol,origLen,info,packet);
             Main.packetsList.add(pd);

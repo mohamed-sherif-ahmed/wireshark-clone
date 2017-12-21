@@ -5,9 +5,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import org.jnetpcap.Pcap;
 import org.jnetpcap.PcapIf;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,7 +56,10 @@ public class MainViewController implements ControlledScreen {
     }
 
     public void load (){
-        PcapFileIO fileLoad = new PcapFileIO("toni.pcap");
+        Stage newStage = new Stage();
+        FileChooser fc = new FileChooser();
+        File pcapFile = fc.showOpenDialog(newStage);
+        PcapFileIO fileLoad = new PcapFileIO(pcapFile.getAbsoluteFile().getAbsolutePath());
         try {
             fileLoad.readOfflineFiles();
             mainScreen.setScreen("SniffingView");

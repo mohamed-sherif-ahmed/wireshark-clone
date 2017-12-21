@@ -105,10 +105,10 @@ public class SniffingViewController implements ControlledScreen {
                 // Compare with filter text.
                 String lowerCaseFilter = newValue.toLowerCase();
                 if (PacketDetails.getProtocol().toLowerCase().contains(lowerCaseFilter)) {
-                    System.out.println("filterProtocol");
+                    //System.out.println("filterProtocol");
                     return true; // Filter matches protocol.
                 } else if (PacketDetails.getNum().contains(newValue)) {
-                    System.out.println("filterno.");
+                    //System.out.println("filterno.");
                     return true; // Filter matches SourceIP.
                 }
 //                else if (PacketDetails.destIPProperty().toString().contains(newValue)) {
@@ -119,7 +119,7 @@ public class SniffingViewController implements ControlledScreen {
 //                    System.out.println("filterSource");
 //                    return true; // Filter matches SourceIP.
 //                }
-                System.out.println("filter0");
+                //System.out.println("filter0");
                 return false; // Does not match.
             });
         });
